@@ -1,0 +1,8 @@
+
+const App = () => {
+  return (
+    <div>welcome to the app</div>
+  )
+}
+
+export default App
