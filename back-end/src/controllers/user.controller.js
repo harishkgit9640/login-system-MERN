@@ -125,7 +125,7 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: true
     }
     return res
-        .status(201)
+        .status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(

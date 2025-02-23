@@ -2,12 +2,12 @@ import Header from "./components/Header"
 import Footer from "./components/Footer"
 import { ToastContainer } from 'react-toastify';
 
-import Routes from "./components/Routes";
+import Layout from "./components/Layout";
 const App = () => {
   return (
     <>
       <Header />
-      <Routes />
+      <Layout />
       <Footer />
       <ToastContainer />
     </>

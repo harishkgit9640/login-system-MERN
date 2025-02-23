@@ -1,16 +1,11 @@
-import React from 'react'
+import { useSelector } from 'react-redux';
 
 const Dashboard = () => {
+    const userData = useSelector((state) => state?.user);
+
     return (
         <div>
-            <div className="logo">Logo .</div>
-            <div className="profile">
-                <img src="" alt="profile-picture" />
-                <ul>
-                    <li>user-name</li>
-                    <li>log out</li>
-                </ul>
-            </div>
+            <h1>Dashboard</h1>
         </div>
     )
 }
