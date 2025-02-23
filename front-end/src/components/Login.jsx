@@ -18,19 +18,31 @@ const Login = () => {
         setFormData((pre) => ({ ...pre, [name]: value }))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        axios({
-            method: "post",
-            url: "http://127.0.0.1:5000/register",
-            data: FormData
-        }).then(() => {
-            // alert("Register Successfully..");
+        const response = await fetch(
+            "http://localhost:5000/api/v1/users/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userName: FormData.userName,
+                    fullName: FormData.fullName,
+                    email: FormData.email,
+                    password: FormData.password,
+                }),
+            }
+        );
+        console.log(response);
+
+        if (response !== null) {
             showToast("Register Successfully..", "success");
-            navigate("/");
-        }).catch((error) => {
+            // navigate("/");
+        } else {
             showToast("Something went wrong", "error");
-        })
+        }
     }
 
     return (
