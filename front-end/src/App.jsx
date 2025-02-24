@@ -1,17 +1,19 @@
+
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import { ToastContainer } from 'react-toastify';
-
-import Layout from "./components/Layout";
+import { Outlet } from "react-router-dom";
 const App = () => {
+
   return (
     <>
       <Header />
-      <Layout />
+      <Outlet />
       <Footer />
       <ToastContainer />
     </>
   )
-}
+};
+
 
 export default App
