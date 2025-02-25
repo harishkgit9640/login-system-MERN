@@ -8,7 +8,7 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Error from "./components/Error";
 import Contact from "./components/Contact";
-import { createBrowserRouter, Route, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 
 const authToken = localStorage.getItem('authToken');
 

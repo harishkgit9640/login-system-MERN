@@ -5,40 +5,20 @@ import React, { useEffect } from 'react'
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../store/userSlice";
 import useToast from "../hooks/useToast";
+import { useNavigate } from "react-router-dom";
+import useFetchApi from "../hooks/useFetchApi";
 const Header = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const showToast = useToast();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const userData = useSelector((state) => state?.user);
     const authToken = localStorage.getItem('authToken');
-    useEffect(() => {
-        if (authToken) {
-            // Fetch user details using the token
-            const fetchUser = async () => {
-                try {
-                    const response = await axios.get(
-                        "http://localhost:5000/api/v1/users/get-user",
 
-                        {
-                            headers: {
-                                "Authorization": `Bearer ${authToken}`,
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    );
+    const response = useFetchApi('http://localhost:5000/api/v1/users/get-user', 'GET')
+    console.log(response);
 
-                    // Dispatch the user data to your state management (e.g., Redux)
-                    dispatch(addUser(response.data.data));
-                } catch (error) {
-                    console.error("Error fetching user details:", error);
-                    // If the token is invalid, clear it from storage
-                    localStorage.removeItem('authToken');
-                }
-            };
-            fetchUser();
-        }
-
-    }, [dispatch]);
+    // dispatch(addUser(response.data.data));
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);

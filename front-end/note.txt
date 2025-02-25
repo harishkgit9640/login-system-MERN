@@ -1,2 +1,0 @@
-# FRONT-END npm packages -
-npm install react-router-dom @reduxjs/toolkit react-redux axios @tanstack/react-query

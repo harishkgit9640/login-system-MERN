@@ -1,64 +1,52 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useToast from '../hooks/useToast';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../store/userSlice'
+import useFetchApi from '../hooks/useFetchApi';
+import useFormData from '../hooks/useFormData';
 const Login = () => {
     const navigate = useNavigate();
     const showToast = useToast();
     const dispatch = useDispatch();
     const [isLogInForm, setIsLogInForm] = useState(false)
-    const [FormData, setFormData] = useState({
+    const { FormData, handleInput, resetFormData } = useFormData({
         userName: '',
         fullName: '',
         email: '',
         password: '',
     })
 
-    const handleInput = (e) => {
-        const { name, value } = e.target
-        setFormData((pre) => ({ ...pre, [name]: value }))
-    }
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        try {
-            const response = await axios.post(
-                "http://localhost:5000/api/v1/users/login",
-                {
-                    userName: FormData.userName,
-                    fullName: FormData.fullName,
-                    email: FormData.email,
-                    password: FormData.password,
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            if (response.data.statusCode === 200) {
-                // Store the token in localStorage or sessionStorage
-                localStorage.setItem('authToken', response.data.data.accessToken);
-
-                // Dispatch the user data to your state management (e.g., Redux)
-                dispatch(addUser(response.data.data));
-
-                // Show a success message
-                showToast(response.data.message, "success");
-
-                // Redirect the user to the home page or dashboard
-                navigate("/");
-            } else {
-                showToast(response.data.message, "error");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            showToast(error.response?.data?.message || "Something went wrong", "error");
+        resetFormData();
+        const data = {
+            userName: FormData.userName,
+            fullName: FormData.fullName,
+            email: FormData.email,
+            password: FormData.password,
         }
+        const response = useFetchApi('http://localhost:5000/api/v1/users/login', 'POST', data)
+        console.log(response);
+
+        return false;
+
+        if (response.data.statusCode === 200) {
+            // Store the token in localStorage or sessionStorage
+            localStorage.setItem('authToken', response.data.data.accessToken);
+
+            // Dispatch the user data to your state management (e.g., Redux)
+            dispatch(addUser(response.data.data));
+
+            // Show a success message
+            showToast(response.data.message, "success");
+
+            // Redirect the user to the home page or dashboard
+            navigate("/");
+        } else {
+            showToast(response.data.message, "error");
+        }
+
     };
 
 
