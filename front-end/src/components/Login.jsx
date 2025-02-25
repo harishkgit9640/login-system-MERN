@@ -10,7 +10,7 @@ const Login = () => {
     const showToast = useToast();
     const dispatch = useDispatch();
     const [isLogInForm, setIsLogInForm] = useState(false)
-    const { FormData, handleInput, resetFormData } = useFormData({
+    const { value: FormData, handleInput, resetFormData } = useFormData({
         userName: '',
         fullName: '',
         email: '',
@@ -26,9 +26,8 @@ const Login = () => {
             email: FormData.email,
             password: FormData.password,
         }
-        const response = useFetchApi('http://localhost:5000/api/v1/users/login', 'POST', data)
-        console.log(response);
-
+        console.log(data);
+        // const response = useFetchApi('http://localhost:5000/api/v1/users/login', 'POST', data)
         return false;
 
         if (response.data.statusCode === 200) {

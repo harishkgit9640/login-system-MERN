@@ -15,8 +15,8 @@ const Header = () => {
     const userData = useSelector((state) => state?.user);
     const authToken = localStorage.getItem('authToken');
 
-    const response = useFetchApi('http://localhost:5000/api/v1/users/get-user', 'GET')
-    console.log(response);
+    // const response = useFetchApi('http://localhost:5000/api/v1/users/get-user', 'GET')
+    // console.log(response);
 
     // dispatch(addUser(response.data.data));
 
