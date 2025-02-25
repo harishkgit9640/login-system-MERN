@@ -69,8 +69,6 @@ const registerUser = asyncHandler(async (req, res) => {
     // create object to send the data into database
     const user = await User.create({
         fullName,
-        avatar: avatar?.url || "",
-        coverImage: coverImage?.url || "",
         email,
         password,
         userName: userName.toLowerCase()

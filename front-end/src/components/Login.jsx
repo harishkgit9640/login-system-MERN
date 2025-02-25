@@ -9,7 +9,24 @@ const Login = () => {
     const navigate = useNavigate();
     const showToast = useToast();
     const dispatch = useDispatch();
-    const [isLogInForm, setIsLogInForm] = useState(false)
+    const [isLogInForm, setIsLogInForm] = useState(true)
+    const [apiConfig, setApiConfig] = useState(null); // State to trigger API call
+
+    const { responseData, loading, error } = useFetchApi(
+        apiConfig?.url,
+        apiConfig?.method,
+        apiConfig?.data
+    );
+
+    if (responseData) {
+        console.log(responseData);
+
+        localStorage.setItem('authToken', responseData.data.accessToken);
+        dispatch(addUser(responseData.data));
+        showToast(responseData.message, "success");
+        navigate("/");
+    }
+
     const { value: FormData, handleInput, resetFormData } = useFormData({
         userName: '',
         fullName: '',
@@ -19,33 +36,25 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        resetFormData();
         const data = {
             userName: FormData.userName,
             fullName: FormData.fullName,
             email: FormData.email,
             password: FormData.password,
         }
-        console.log(data);
-        // const response = useFetchApi('http://localhost:5000/api/v1/users/login', 'POST', data)
-        return false;
-
-        if (response.data.statusCode === 200) {
-            // Store the token in localStorage or sessionStorage
-            localStorage.setItem('authToken', response.data.data.accessToken);
-
-            // Dispatch the user data to your state management (e.g., Redux)
-            dispatch(addUser(response.data.data));
-
-            // Show a success message
-            showToast(response.data.message, "success");
-
-            // Redirect the user to the home page or dashboard
-            navigate("/");
+        if (isLogInForm) {
+            setApiConfig({
+                url: 'http://localhost:5000/api/v1/users/login',
+                method: 'POST',
+                data,
+            });
         } else {
-            showToast(response.data.message, "error");
+            setApiConfig({
+                url: 'http://localhost:5000/api/v1/users/register',
+                method: 'POST',
+                data,
+            });
         }
-
     };
 
 
