@@ -20,7 +20,6 @@ const Login = () => {
 
     if (responseData) {
         console.log(responseData);
-
         localStorage.setItem('authToken', responseData.data.accessToken);
         dispatch(addUser(responseData.data));
         showToast(responseData.message, "success");
