@@ -8,22 +8,28 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Error from "./components/Error";
 import Contact from "./components/Contact";
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import PrivateRoute from './PrivateRoute.jsx'
 
-const authToken = localStorage.getItem('authToken');
-
-const appRouter = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path='/' element={<App />}>
-      <Route path='/login' element={<Login />} />
-      <Route path='' element={<Dashboard />} />
-      <Route path='contact' element={<Contact />} />
-      <Route path='*' element={<Error />} />
-      {/* <Route path='user/:userid' element={<User />} /> */}
-    </Route>
-  )
-)
-
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <PrivateRoute>
+        <App />
+      </PrivateRoute>
+    ),
+    children: [
+      { path: "/", element: <Dashboard /> },
+      { path: "contact", element: <Contact /> },
+      { path: "*", element: <Error /> },
+    ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -19,7 +19,6 @@ const Login = () => {
     );
 
     if (responseData) {
-        console.log(responseData);
         localStorage.setItem('authToken', responseData.data.accessToken);
         dispatch(addUser(responseData.data));
         showToast(responseData.message, "success");
@@ -80,7 +79,7 @@ const Login = () => {
                     </div>
                     <div className="input-item">
                         <label htmlFor="Password" className='py-2 block font-bold'>Password</label>
-                        <input type="password" name='password' className='px-4 py-2 bg-slate-600 text-white outline-none rounded-sm w-full' onChange={handleInput} value={FormData.password} placeholder='Password' />
+                        <input type="password" name='password' className='px-4 py-2 bg-slate-600 text-white outline-none rounded-sm w-full' onChange={handleInput} value={FormData.password} placeholder='Password' autoComplete='off' />
                     </div>
 
                     <button type='submit' className='px-6 py-2 my-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md outline-none cursor-pointer'> {isLogInForm ? "Login" : "Register"} </button>

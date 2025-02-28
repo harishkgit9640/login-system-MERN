@@ -8,6 +8,7 @@ const useFetchApi = (url, method, data = null) => {
     const [error, setError] = useState(null);
     const showToast = useToast();
     const authToken = localStorage.getItem('authToken');
+    console.log(authToken);
 
     const options = {
         headers: {
@@ -18,7 +19,6 @@ const useFetchApi = (url, method, data = null) => {
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        console.log(source);
 
         const fetchData = async () => {
             try {
@@ -49,7 +49,9 @@ const useFetchApi = (url, method, data = null) => {
             }
         };
 
-        fetchData();
+        if (url !== undefined && method !== undefined) {
+            fetchData();
+        }
 
         // Cleanup function to cancel the request
         return () => {
