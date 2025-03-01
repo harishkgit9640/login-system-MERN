@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useToast from '../hooks/useToast';
 import { useDispatch } from 'react-redux';
@@ -15,16 +15,28 @@ const Login = () => {
         apiConfig?.method,
         apiConfig?.data
     );
+    useEffect(() => {
+        if (!responseData) return; // Ensure responseData exists before proceeding
 
-    if (responseData) {
-        localStorage.setItem('authToken', responseData.data.accessToken);
-        showToast(responseData.message, "success");
-        if (!isLogInForm) {
-            navigate("/login");
+        if (isLogInForm) {
+            // Handle Login
+            if (responseData?.data?.accessToken) {
+                localStorage.setItem("authToken", responseData.data.accessToken);
+                showToast(responseData.message, "success");
+                navigate("/");
+            } else {
+                showToast(responseData?.message || "Login failed", "error"); // Show error for login failure
+            }
         } else {
-            navigate("/");
+            // Handle Register
+            if (responseData?.success) { // Assuming success is returned on successful registration
+                showToast(responseData.message, "success");
+                navigate("/login"); // Redirect to login after successful registration
+            } else {
+                showToast(responseData?.message || "Registration failed", "error");
+            }
         }
-    }
+    }, [responseData, navigate, showToast, isLogInForm]);
 
     const { value: FormData, handleInput, resetFormData } = useFormData({
         userName: '',
@@ -54,6 +66,7 @@ const Login = () => {
                 data,
             });
         }
+        resetFormData();
     };
 
 
