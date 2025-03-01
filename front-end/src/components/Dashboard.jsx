@@ -35,7 +35,7 @@ const Dashboard = () => {
                     {/* search section */}
                     <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                         <div className="add-user">
-                            <button className='btn px-6 py-2 bg-indigo-800 text-white rounded-md' >Add User</button>
+                            <Link to="/add-user" className='btn px-6 py-2 bg-indigo-800 text-white rounded-md' >Add User</Link>
                         </div>
                         <label htmlFor="table-search" className="sr-only">Search</label>
                         <div className="relative">

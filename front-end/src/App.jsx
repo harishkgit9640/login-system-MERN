@@ -8,6 +8,7 @@ import Error from "./components/Error";
 import Contact from "./components/Contact";
 import About from "./components/About";
 import Profile from "./components/Profile";
+import UserForm from "./components/UserForm";
 const App = () => {
   return (
     <>
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/add-user" element={<UserForm />} />
           <Route path="/about" element={<About />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/contact" element={<Contact />} />

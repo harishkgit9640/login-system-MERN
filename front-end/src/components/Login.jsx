@@ -19,7 +19,11 @@ const Login = () => {
     if (responseData) {
         localStorage.setItem('authToken', responseData.data.accessToken);
         showToast(responseData.message, "success");
-        navigate("/");
+        if (!isLogInForm) {
+            navigate("/login");
+        } else {
+            navigate("/");
+        }
     }
 
     const { value: FormData, handleInput, resetFormData } = useFormData({
