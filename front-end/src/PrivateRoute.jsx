@@ -1,8 +1,19 @@
-import { Navigate } from "react-router-dom";
+import Header from "./components/Header"
+import Footer from "./components/Footer"
+import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = () => {
+
     const authToken = localStorage.getItem("authToken");
-    return authToken ? children : (<Navigate to="/login" />)
+
+    return authToken ? (
+        <>
+            <Header />
+            <Outlet />
+            <Footer />
+        </>
+    ) : <Navigate to="/login" />
+
 };
 
 export default PrivateRoute

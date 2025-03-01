@@ -8,7 +8,6 @@ const useFetchApi = (url, method, data = null) => {
     const [error, setError] = useState(null);
     const showToast = useToast();
     const authToken = localStorage.getItem('authToken');
-    console.log(authToken);
 
     const options = {
         headers: {
