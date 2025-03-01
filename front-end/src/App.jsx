@@ -13,7 +13,7 @@ const App = () => {
       <ToastContainer />
     </>
   )
-};
+}
 
 
 export default App

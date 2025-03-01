@@ -8,6 +8,8 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Error from "./components/Error";
 import Contact from "./components/Contact";
+import About from "./components/About";
+import Profile from "./components/Profile";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PrivateRoute from './PrivateRoute.jsx'
 
@@ -21,7 +23,9 @@ const appRouter = createBrowserRouter([
     ),
     children: [
       { path: "/", element: <Dashboard /> },
-      { path: "contact", element: <Contact /> },
+      { path: "/about", element: <About /> },
+      { path: "/profile", element: <Profile /> },
+      { path: "/contact", element: <Contact /> },
       { path: "*", element: <Error /> },
     ],
   },
