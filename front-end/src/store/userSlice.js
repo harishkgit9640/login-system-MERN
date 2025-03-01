@@ -1,20 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        user: null,
+        currentUser: null,
+        allUser: [], // ✅ Default to an empty array to prevent `.map()` errors
     },
     reducers: {
-        addUser: (state, action) => {
-            state.user = action.payload;
+        addAllUser: (state, action) => {
+            state.allUser = Array.isArray(action.payload) ? action.payload : []; // ✅ Ensure it's always an array
+        },
+        addCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
         },
         removeUser: (state) => {
-            state.user = null;
+            state.currentUser = null; // ✅ Fix: Clear `currentUser`, not `user`
+            state.allUser = []; // ✅ Optionally clear `allUser`
         },
     },
 });
 
-export const { addUser, removeUser } = userSlice.actions
-export default userSlice.reducer
+export const { addCurrentUser, addAllUser, removeUser } = userSlice.actions;
+export default userSlice.reducer;

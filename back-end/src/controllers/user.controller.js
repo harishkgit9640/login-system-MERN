@@ -252,6 +252,14 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, req.user, "current user fetched successfully"))
 })
 
+//get current user
+const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find().select("-password -refreshToken")
+    return res
+        .status(200)
+        .json(new ApiResponse(200, users, "all users fetched successfully"))
+})
+
 //update user account
 const updateAccountDetails = asyncHandler(async (req, res) => {
     const { fullName, email } = req.body
@@ -453,4 +461,4 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 })
 
 
-export { registerUser, loginUser, logOutUser, incomingRefreshToken, changeCurrentPassword, getCurrentUser, getUserChannelProfile, updateUserAvatar, updateCoverImage, updateAccountDetails, getWatchHistory };
+export { registerUser, loginUser, logOutUser, incomingRefreshToken, changeCurrentPassword, getAllUsers, getCurrentUser, getUserChannelProfile, updateUserAvatar, updateCoverImage, updateAccountDetails, getWatchHistory };

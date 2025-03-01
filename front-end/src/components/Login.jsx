@@ -2,13 +2,11 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useToast from '../hooks/useToast';
 import { useDispatch } from 'react-redux';
-import { addUser } from '../store/userSlice'
 import useFetchApi from '../hooks/useFetchApi';
 import useFormData from '../hooks/useFormData';
 const Login = () => {
     const navigate = useNavigate();
     const showToast = useToast();
-    const dispatch = useDispatch();
     const [isLogInForm, setIsLogInForm] = useState(true)
     const [apiConfig, setApiConfig] = useState(null); // State to trigger API call
 
@@ -20,7 +18,6 @@ const Login = () => {
 
     if (responseData) {
         localStorage.setItem('authToken', responseData.data.accessToken);
-        dispatch(addUser(responseData.data));
         showToast(responseData.message, "success");
         navigate("/");
     }

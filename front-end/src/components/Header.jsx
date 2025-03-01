@@ -27,7 +27,7 @@ const Header = () => {
         <header className="flex items-center justify-between px-5 md:px-10 p-4 bg-white shadow-md">
 
             <div className="flex items-center">
-                <h1 className="text-2xl font-bold text-indigo-800">HK.</h1>
+                <Link to="/" className="text-2xl font-bold text-indigo-800">HK.</Link>
             </div>
 
             <ul className="flex space-x-4">

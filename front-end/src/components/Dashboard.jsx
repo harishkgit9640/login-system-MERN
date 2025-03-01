@@ -1,18 +1,32 @@
 import { useDispatch, useSelector } from 'react-redux';
-import useFetchApi from '../hooks/useFetchApi';
-import { addUser } from '../store/userSlice';
+import { addAllUser } from '../store/userSlice';
+import { Link } from 'react-router-dom';
+import useToast from '../hooks/useToast';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const Dashboard = () => {
-    const userData = useSelector((state) => state?.user);
+    const userData = useSelector((state) => state?.user?.allUser);
     const dispatch = useDispatch();
-    const authToken = localStorage.getItem('authToken');
-    console.log(userData);
+    const showToast = useToast();
 
-    // if (!userData && authToken) {
-    // const response = useFetchApi('http://localhost:5000/api/v1/users/get-user', 'GET', null)
-    // console.log(response);
-    // dispatch(addUser(response.data.data));
-    // }
+    const authToken = localStorage.getItem('authToken');
+
+    const options = {
+        headers: {
+            "Authorization": `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+        },
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const responseData = await axios.get('http://localhost:5000/api/v1/users/all-users', options);
+            dispatch(addAllUser(responseData?.data?.data)); // ✅ State update happens after render
+            showToast(responseData?.data?.message, "success"); // ✅ Toast after render
+        };
+        userData?.length === 0 && fetchData();
+    }, [userData, dispatch, showToast]); // Dependencies ensure this runs when needed
 
     return (
         <div>
@@ -56,29 +70,43 @@ const Dashboard = () => {
                         </thead>
 
                         <tbody>
-                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td className="w-4 p-4">
-                                    <span>1</span>
-                                </td>
-                                <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                    <img className="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="Jese image" />
-                                    <div className="ps-3">
-                                        <div className="text-base font-semibold">Neil Sims</div>
-                                        <div className="font-normal text-gray-500">neil.sims@flowbite.com</div>
-                                    </div>
-                                </th>
-                                <td className="px-6 py-4">
-                                    React Developer
-                                </td>
-                                <td className="px-6 py-4">
-                                    <div className="flex items-center">
-                                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Online
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4">
-                                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                                </td>
-                            </tr>
+                            {Array.isArray(userData) ?
+                                (userData?.map((user, index) => {
+                                    return (
+                                        <tr key={user._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td className="w-4 p-4">
+                                                <span> {index + 1} </span>
+                                            </td>
+                                            <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                                <img className="w-10 h-10 rounded-full" src={user.avatar ? user.avatar : "https://flowbite.com/docs/images/people/profile-picture-3.jpg"} alt="Jese image" />
+                                                <div className="ps-3">
+                                                    <div className="text-base font-semibold"> {user?.userName} </div>
+                                                    <div className="font-normal text-gray-500">{user?.email}</div>
+                                                </div>
+                                            </th>
+                                            <td className="px-6 py-4">
+                                                {user.fullName}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center">
+                                                    <div className={"h-2.5 w-2.5 rounded-full me-2 " + (user.avatar ? "bg-green-500" : "bg-red-500")}></div> {user.avatar ? "Active" : "Inactive"}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <Link to="/profile" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</Link>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                                ) : (
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <td colSpan={5} className="p-4 text-center">
+                                            <span> No data found! </span>
+                                        </td>
+                                    </tr>
+                                )
+                            }
+
                         </tbody>
                     </table>
                 </div>
