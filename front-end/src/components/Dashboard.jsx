@@ -2,13 +2,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addAllUser } from '../store/userSlice';
 import { Link } from 'react-router-dom';
 import useToast from '../hooks/useToast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import UserModal from './userModal';
 
 const Dashboard = () => {
     const userData = useSelector((state) => state?.user?.allUser);
     const dispatch = useDispatch();
     const showToast = useToast();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const authToken = localStorage.getItem('authToken');
 
@@ -20,13 +23,14 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            const responseData = await axios.get('http://localhost:5000/api/v1/users/all-users', options);
-            dispatch(addAllUser(responseData?.data?.data)); // ✅ State update happens after render
-            showToast(responseData?.data?.message, "success"); // ✅ Toast after render
-        };
         userData?.length === 0 && fetchData();
     }, [userData, dispatch, showToast]); // Dependencies ensure this runs when needed
+
+    const fetchData = async () => {
+        const responseData = await axios.get('http://localhost:5000/api/v1/users/all-users', options);
+        dispatch(addAllUser(responseData?.data?.data)); // ✅ State update happens after render
+        showToast(responseData?.data?.message, "success"); // ✅ Toast after render
+    };
 
     return (
         <div>
@@ -34,9 +38,9 @@ const Dashboard = () => {
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full px-32 py-10 ">
                     {/* search section */}
                     <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-                        <div className="add-user">
-                            <Link to="/add-user" className='btn px-6 py-2 bg-indigo-800 text-white rounded-md' >Add User</Link>
-                        </div>
+                        <button className="block text-white bg-blue-700 hover:bg-blue-800 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" onClick={() => { setSelectedUser(null); setModalOpen(true); }}>
+                            Add User
+                        </button>
                         <label htmlFor="table-search" className="sr-only">Search</label>
                         <div className="relative">
                             <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -63,7 +67,7 @@ const Dashboard = () => {
                                 <th scope="col" className="px-6 py-3">
                                     Status
                                 </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" colSpan={2} className="px-6 py-3">
                                     Action
                                 </th>
                             </tr>
@@ -93,7 +97,10 @@ const Dashboard = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <Link to="/profile" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</Link>
+                                                <button onClick={() => { setSelectedUser(user[index]); setModalOpen(true); }} className="font-medium text-white bg-blue-700 hover:bg-blue-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Edit</button>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <button onClick={() => { setSelectedUser(user[index]?._id); setModalOpen(true); }} className="font-medium text-white bg-red-700 hover:bg-red-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Delete</button>
                                             </td>
                                         </tr>
                                     )
@@ -111,6 +118,13 @@ const Dashboard = () => {
                     </table>
                 </div>
             </div>
+
+            <UserModal
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                user={userData}
+                onSave={fetchData}
+            />
         </div>
     )
 }
