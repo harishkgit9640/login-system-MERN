@@ -343,5 +343,17 @@ const deleteAccount = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "account deleted successfully"))
 })
 
+// Delete user account
+const deleteUser = asyncHandler(async (req, res) => {
+    const { userId } = req.params
+    const user = await User.findByIdAndDelete(userId)
+    if (!user) {
+        throw new ApiError(400, "user not found")
+    }
+    return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "User deleted successfully"))
+})
 
-export { registerUser, loginUser, logOutUser, incomingRefreshToken, changeCurrentPassword, getAllUsers, getCurrentUser, updateUserAvatar, updateCoverImage, updateAccountDetails, deleteAccount };
+
+export { registerUser, loginUser, logOutUser, incomingRefreshToken, changeCurrentPassword, getAllUsers, getCurrentUser, updateUserAvatar, updateCoverImage, updateAccountDetails, deleteAccount, deleteUser };
