@@ -332,133 +332,16 @@ const updateCoverImage = asyncHandler(async (req, res) => {
 
 })
 
-// get subscribers
-const getUserChannelProfile = asyncHandler(async (req, res) => {
-    const user = await User.findOne({ "userName": req.body.userName });
-    console.log(user);
-    console.log(user.userName.toLowerCase()); // need to work
-
+// Delete user account
+const deleteAccount = asyncHandler(async (req, res) => {
+    const user = await User.findByIdAndDelete(req.user?._id)
     if (!user) {
-        throw new ApiError(401, "userName not found");
+        throw new ApiError(400, "user not found")
     }
-
-    const channel = await User.aggregate[
-        {
-            $match: { userName: user.userName.toLowerCase() },
-        },
-        {
-            $lookup: {
-                from: "subscriptions",
-                localFields: "_id",
-                foreignFields: "channel",
-                as: "subscribers"
-            },
-        },
-        {
-            $lookup: {
-                from: "subscriptions",
-                localFields: "_id",
-                foreignFields: "subscriber",
-                as: "subscribedTo"
-            },
-        },
-        {
-            addFields: {
-                subscriberCount: { $size: "$subscribers" },
-                channelSubscribedToCount: { $size: "$subscribedTo" },
-                isSubscribed: {
-                    $cond: {
-                        if: { $in: [req.user?._id, "$subscribers.subscriber"] },
-                        then: true,
-                        else: false
-                    }
-                }
-            },
-
-        },
-        {
-            $project: {
-                userName: 1,
-                fullName: 1,
-                subscriberCount: 1,
-                channelSubscribedToCount: 1,
-                isSubscribed: 1,
-                avatar: 1,
-                coverImage: 1,
-                email: 1,
-            }
-        }
-    ]
-
-    if (!channel?.length) {
-        throw new ApiError("channel dose not exist")
-    }
-
     return res
         .status(200)
-        .json(new ApiResponse(200, channel[0], "channel fetched successfully"))
-
-
-})
-
-// fetch watch history
-const getWatchHistory = asyncHandler(async (req, res) => {
-    let data = new mongoose.Types.ObjectId(req.user._id);
-    console.log(data); // need to work
-
-    const user = await User.aggregate(
-        [
-            {
-                $match: {
-                    _id: new mongoose.Types.ObjectId(req.user._id)
-                }
-            },
-            {
-                $lookup: {
-                    from: "videos",
-                    localFields: "watchHistory",
-                    foreignFields: "_id",
-                    as: "watchHistory",
-                    pipeline: [
-                        {
-                            $lookup: {
-                                from: "users",
-                                localFields: "owner",
-                                foreignFields: "_id",
-                                as: "owner",
-                                pipeline: [
-                                    {
-                                        $project: {
-                                            fullName: 1,
-                                            userName: 1,
-                                            avatar: 1,
-                                        }
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            $addFields: {
-                                owner: {
-                                    $first: "$owner"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        ])
-
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                user[0].WatchHistory,
-                "watchHistory fetched successfully"
-            )
-        )
+        .json(new ApiResponse(200, {}, "account deleted successfully"))
 })
 
 
-export { registerUser, loginUser, logOutUser, incomingRefreshToken, changeCurrentPassword, getAllUsers, getCurrentUser, getUserChannelProfile, updateUserAvatar, updateCoverImage, updateAccountDetails, getWatchHistory };
+export { registerUser, loginUser, logOutUser, incomingRefreshToken, changeCurrentPassword, getAllUsers, getCurrentUser, updateUserAvatar, updateCoverImage, updateAccountDetails, deleteAccount };
