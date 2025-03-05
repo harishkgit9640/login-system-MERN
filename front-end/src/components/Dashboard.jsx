@@ -11,7 +11,7 @@ const Dashboard = () => {
     const dispatch = useDispatch();
     const showToast = useToast();
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState([]);
 
     const authToken = localStorage.getItem('authToken');
 
@@ -91,16 +91,17 @@ const Dashboard = () => {
                                             <td className="px-6 py-4">
                                                 {user.fullName}
                                             </td>
+
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center">
                                                     <div className={"h-2.5 w-2.5 rounded-full me-2 " + (user.avatar ? "bg-green-500" : "bg-red-500")}></div> {user.avatar ? "Active" : "Inactive"}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <button onClick={() => { setSelectedUser(user[index]); setModalOpen(true); }} className="font-medium text-white bg-blue-700 hover:bg-blue-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Edit</button>
+                                                <button onClick={() => { setSelectedUser(userData[index]); setModalOpen(true); }} className="font-medium text-white bg-blue-700 hover:bg-blue-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Edit</button>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <button onClick={() => { setSelectedUser(user[index]?._id); setModalOpen(true); }} className="font-medium text-white bg-red-700 hover:bg-red-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Delete</button>
+                                                <button onClick={() => { setSelectedUser(userData[index]); setModalOpen(true); }} className="font-medium text-white bg-red-700 hover:bg-red-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Delete</button>
                                             </td>
                                         </tr>
                                     )
@@ -122,7 +123,7 @@ const Dashboard = () => {
             <UserModal
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
-                user={userData}
+                user={selectedUser}
                 onSave={fetchData}
             />
         </div>

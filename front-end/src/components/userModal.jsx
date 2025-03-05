@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const UserModal = ({ isOpen, onClose, user, onSave }) => {
-    const [formData, setFormData] = useState({ name: "", email: "" });
-    console.log(user);
+    const [formData, setFormData] = useState({ fullName: "", userName: "", email: "", password: "" });
+    console.log(" user modal => ", user);
 
     useEffect(() => {
         if (user) {
-            setFormData({ name: user.userName, email: user.email });
+            setFormData({ fullName: user.fullName, userName: user.userName, email: user.email });
         } else {
-            setFormData({ name: "", email: "" });
+            setFormData({ fullName: "", userName: "", email: "", password: "" });
         }
     }, [user]);
 
@@ -52,9 +52,18 @@ const UserModal = ({ isOpen, onClose, user, onSave }) => {
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        name="name"
-                        placeholder="Name"
-                        value={formData.name}
+                        name="fullName"
+                        placeholder="Full Name"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded mb-2"
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="userName"
+                        placeholder="User Name"
+                        value={formData.userName}
                         onChange={handleChange}
                         className="w-full p-2 border rounded mb-2"
                         required
@@ -64,6 +73,15 @@ const UserModal = ({ isOpen, onClose, user, onSave }) => {
                         name="email"
                         placeholder="Email"
                         value={formData.email}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded mb-2"
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
                         onChange={handleChange}
                         className="w-full p-2 border rounded mb-2"
                         required
