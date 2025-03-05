@@ -21,9 +21,9 @@ const UserModal = ({ isOpen, onClose, user, onSave }) => {
         e.preventDefault();
         try {
             if (user) {
-                await axios.put(`https://api.example.com/users/${user.id}`, formData);
+                await axios.put(`http://localhost:5000/api/v1/users/${user.id}`, formData);
             } else {
-                await axios.post("https://api.example.com/users", formData);
+                await axios.post("http://localhost:5000/api/v1/users/create", formData);
             }
             onSave();
             onClose();
@@ -35,7 +35,7 @@ const UserModal = ({ isOpen, onClose, user, onSave }) => {
     const handleDelete = async () => {
         if (!user) return;
         try {
-            await axios.delete(`https://api.example.com/users/${user.id}`);
+            await axios.delete(`http://localhost:5000/api/v1/users/${user.id}`);
             onSave();
             onClose();
         } catch (error) {
