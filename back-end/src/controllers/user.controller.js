@@ -262,15 +262,15 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 //update user account
 const updateAccountDetails = asyncHandler(async (req, res) => {
-    const { fullName, email } = req.body
+    const { fullName, userName, email } = req.body
     // console.log(req.body);
-    if (!email || !fullName) {
-        throw new ApiError(400, "Invalid email and fullName")
+    if (!email || !fullName || !userName) {
+        throw new ApiError(400, "Invalid email UserName and fullName")
     }
     const user = await User.findByIdAndUpdate(req.user?._id,
         // req.body,
         {
-            $set: { email: email, fullName: fullName }
+            $set: { email: email, fullName: fullName, userName: userName }
         },
         { new: true }
     ).select("-password")

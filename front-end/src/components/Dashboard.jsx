@@ -5,22 +5,13 @@ import useToast from '../hooks/useToast';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import UserModal from './userModal';
-
+import { OPTIONS as options } from '../utils/constants';
 const Dashboard = () => {
     const userData = useSelector((state) => state?.user?.allUser);
     const dispatch = useDispatch();
     const showToast = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState([]);
-
-    const authToken = localStorage.getItem('authToken');
-
-    const options = {
-        headers: {
-            "Authorization": `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-        },
-    };
 
     useEffect(() => {
         userData?.length === 0 && fetchData();
@@ -31,6 +22,18 @@ const Dashboard = () => {
         dispatch(addAllUser(responseData?.data?.data)); // ✅ State update happens after render
         showToast(responseData?.data?.message, "success"); // ✅ Toast after render
     };
+
+    const handleDelete = async (user_id) => {
+        if (!user_id) return;
+        try {
+            let responseData = await axios.delete(`http://localhost:5000/api/v1/users/delete-user/${user_id}`, options);
+            showToast(responseData?.data?.message, "success");
+            fetchData();
+        } catch (error) {
+            console.error("Error deleting user:", error);
+        }
+    };
+
 
     return (
         <div>
@@ -101,7 +104,7 @@ const Dashboard = () => {
                                                 <button onClick={() => { setSelectedUser(userData[index]); setModalOpen(true); }} className="font-medium text-white bg-blue-700 hover:bg-blue-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Edit</button>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <button onClick={() => { setSelectedUser(userData[index]); setModalOpen(true); }} className="font-medium text-white bg-red-700 hover:bg-red-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Delete</button>
+                                                <button onClick={() => handleDelete(user._id)} className="font-medium text-white bg-red-700 hover:bg-red-800 rounded-md text-sm px-5 py-2.5 text-center light:text-blue-500">Delete</button>
                                             </td>
                                         </tr>
                                     )

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import useToast from "../hooks/useToast";
+import { OPTIONS } from '../utils/constants';
 const UserModal = ({ isOpen, onClose, user, onSave }) => {
+    const showToast = useToast();
     const [formData, setFormData] = useState({ fullName: "", userName: "", email: "", password: "" });
-    console.log(" user modal => ", user);
+    // console.log(" user modal => ", user._id);
 
     useEffect(() => {
         if (user) {
@@ -19,27 +21,21 @@ const UserModal = ({ isOpen, onClose, user, onSave }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("formData => ", formData);
+
+        let responseData;
         try {
             if (user) {
-                await axios.put(`http://localhost:5000/api/v1/users/${user.id}`, formData);
+                responseData = await axios.patch(`http://localhost:5000/api/v1/users/update-account`, formData, OPTIONS);
             } else {
-                await axios.post("http://localhost:5000/api/v1/users/create", formData);
+                responseData = await axios.post("http://localhost:5000/api/v1/users/register", formData);
             }
+            showToast(responseData?.data?.message, "success");
             onSave();
             onClose();
         } catch (error) {
             console.error("Error saving user:", error);
-        }
-    };
-
-    const handleDelete = async () => {
-        if (!user) return;
-        try {
-            await axios.delete(`http://localhost:5000/api/v1/users/${user.id}`);
-            onSave();
-            onClose();
-        } catch (error) {
-            console.error("Error deleting user:", error);
+            showToast(error.response?.data?.message, "error");
         }
     };
 
@@ -77,28 +73,23 @@ const UserModal = ({ isOpen, onClose, user, onSave }) => {
                         className="w-full p-2 border rounded mb-2"
                         required
                     />
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded mb-2"
-                        required
-                    />
+                    {!user && (
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded mb-2"
+                            required
+                        />
+                    )}
                     <div className="flex justify-between mt-4">
                         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
                             {user ? "Update" : "Create"}
                         </button>
-                        {user && (
-                            <button
-                                type="button"
-                                onClick={handleDelete}
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                            >
-                                Delete
-                            </button>
-                        )}
+
                         <button type="button" onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded">
                             Cancel
                         </button>

@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import useToast from './useToast';
+import { OPTIONS as options } from '../utils/constants';
 
 const useFetchApi = (url, method, data = null) => {
     const [responseData, setResponseData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const showToast = useToast();
-    const authToken = localStorage.getItem('authToken');
 
-    const options = {
-        headers: {
-            "Authorization": `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-        },
-    };
 
     useEffect(() => {
         const source = axios.CancelToken.source();
