@@ -1,13 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { addAllUser } from '../store/userSlice';
-import { Link } from 'react-router-dom';
 import useToast from '../hooks/useToast';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import UserModal from './userModal';
 import { OPTIONS as options } from '../utils/constants';
 const Dashboard = () => {
-    const userData = useSelector((state) => state?.user?.allUser);
+    const { currentUser, allUser } = useSelector((state) => state?.user);
+    console.log(currentUser);
+    console.log(allUser);
+
     const dispatch = useDispatch();
     const showToast = useToast();
     const [modalOpen, setModalOpen] = useState(false);
