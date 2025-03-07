@@ -6,9 +6,9 @@ import axios from 'axios';
 import UserModal from './userModal';
 import { OPTIONS as options } from '../utils/constants';
 const Dashboard = () => {
-    const { currentUser, allUser } = useSelector((state) => state?.user);
-    console.log(currentUser);
-    console.log(allUser);
+    const userData = useSelector((state) => state?.user?.allUser);
+    console.log(userData);
+
 
     const dispatch = useDispatch();
     const showToast = useToast();
