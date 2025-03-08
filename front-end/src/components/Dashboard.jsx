@@ -7,9 +7,6 @@ import UserModal from './userModal';
 import { OPTIONS as options } from '../utils/constants';
 const Dashboard = () => {
     const userData = useSelector((state) => state?.user?.allUser);
-    console.log(userData);
-
-
     const dispatch = useDispatch();
     const showToast = useToast();
     const [modalOpen, setModalOpen] = useState(false);
