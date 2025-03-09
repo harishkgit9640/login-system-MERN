@@ -14,12 +14,12 @@ const Dashboard = () => {
 
     useEffect(() => {
         userData?.length === 0 && fetchData();
-    }, [userData, dispatch, showToast]); // Dependencies ensure this runs when needed
+    }, [userData, dispatch, showToast]);
 
     const fetchData = async () => {
         const responseData = await axios.get('http://localhost:5000/api/v1/users/all-users', options);
-        dispatch(addAllUser(responseData?.data?.data)); // ✅ State update happens after render
-        showToast(responseData?.data?.message, "success"); // ✅ Toast after render
+        dispatch(addAllUser(responseData?.data?.data));
+        showToast(responseData?.data?.message, "success");
     };
 
     const handleDelete = async (user_id) => {
