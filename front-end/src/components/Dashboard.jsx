@@ -12,6 +12,7 @@ const Dashboard = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState([]);
 
+    // fetch data from backend
     useEffect(() => {
         userData?.length === 0 && fetchData();
     }, [userData, dispatch, showToast]);
