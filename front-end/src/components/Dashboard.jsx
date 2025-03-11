@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import UserModal from './userModal';
 import { OPTIONS as options } from '../utils/constants';
+
 const Dashboard = () => {
     const userData = useSelector((state) => state?.user?.allUser);
     const dispatch = useDispatch();
